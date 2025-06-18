@@ -36,80 +36,37 @@
           </thead>
           <tbody>
             @forelse($clients as $key=>$client)
-            <tr class="text-center">
-              <td scope="row">{{ $key = $key + 1 }}</td>
-              <td>{{ $client->nom }} {{ $client->prenom }}</td>
-              <td>{{ $client->telephone }}</td>
-              <td>{{ $client->email ?? '-' }}</td>
-              <td>{{ $client->adresse ?? '-' }}</td>
-              <td class="text-center">
-                <button class="btn btn-sm me-1 text-white" style="background-color: #1b6f0c;" data-bs-toggle="modal"
-                  data-bs-target="#editClientModal{{$client->id}}"><i class="fa fa-pen me-1"></i>Modifier</button>
-                <form action="{{ route('clients.destroy', $client) }}" method="POST" class="d-inline"
-                  onsubmit="return confirm('Confirmer la suppression ?')">
-                  @csrf
-                  @method('DELETE')
-                  <button class="btn btn-sm bg-dark text-white"><i class="fa fa-trash me-1"></i>Supprimer</button>
-                </form>
-              </td>
-            </tr>
-
-            <!-- Modal Édition -->
-            <div class="modal fade" id="editClientModal{{$client->id}}" tabindex="-1"
-              aria-labelledby="editClientModalLabel" aria-hidden="true">
-              <div class="modal-dialog bg-white">
-                <form method="POST" class="modal-content" id="editClientForm" action="{{ route('clients.update', $client) }}">
-                  @csrf
-                  @method('PUT')
-                  <input type="hidden" name="_action" value="edit">
-                  <input type="hidden" name="client_id" value="{{ $client->id }}">
-                  <div class="modal-header text-center">
-                    <h5 class="modal-title" style="color: #1b6f0c;text-align: center;" id="addClientModalLabel">Modifier
-                      le client</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="fa fa-close bg-light"
-                        style="border: none;"></i></button>
-                  </div>
-                  <div class="modal-body ">
-                    <div class="mb-3">
-                      <label for="nom" class="form-label text-dark">Nom</label>
-                      <input type="text" class="form-control w-full" style="background-color: grey;"
-                         value="{{ $client->nom }}" name="nom" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="nom" class="form-label text-dark">Prenom</label>
-                      <input type="text" class="form-control w-full" style="background-color: grey;"
-                        placeholder="Ex : Jonh" value="{{ $client->prenom }}" name="prenom" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="telephone" class="form-label text-dark">Téléphone</label>
-                      <input type="text" class="form-control w-full" style="background-color: grey;"
-                        placeholder="Ex : 627458625" value="{{ $client->telephone }}" name="telephone" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="email" class="form-label text-dark">Email</label>
-                      <input type="email" class="form-control w-full" style="background-color: grey;"
-                        placeholder="Ex : jonh@doe.com" value="{{ $client->email }}" name="email">
-                    </div>
-                    <div class="mb-3">
-                      <label for="adresse" class="form-label text-dark">Adresse</label>
-                      <input type="text" class="form-control w-full" style="background-color: grey;"
-                        placeholder="Ex : Conakry" value="{{ $client->adresse }}" name="adresse">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
-                        class="fa fa-close me-1"></i> Annuler</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save me-1"></i> Modifier</button>
-                  </div>
-                </form>
-              </div>
-            </div>
+              <tr class="text-center">
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $client->nom }} {{ $client->prenom }}</td>
+                <td>{{ $client->telephone }}</td>
+                <td>{{ $client->email ?? '-' }}</td>
+                <td>{{ $client->adresse ?? '-' }}</td>
+                <td>
+                  <button class="btn btn-sm me-1 text-white" style="background-color: #1b6f0c;" 
+                    data-bs-toggle="modal" data-bs-target="#editClientModal{{$client->id}}">
+                    <i class="fa fa-pen me-1"></i>Modifier
+                  </button>
+          
+                  <form action="{{ route('clients.destroy', $client) }}" method="POST" class="d-inline"
+                    onsubmit="return confirm('Confirmer la suppression ?')">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-sm bg-dark text-white"><i class="fa fa-trash me-1"></i>Supprimer</button>
+                  </form>
+                </td>
+              </tr>
+          
+              {{-- Stockage temporaire de la modale --}}
+              @push('modals')
+                @include('clients.partials.edit-modal', ['client' => $client])
+              @endpush
             @empty
-            <tr>
-              <td colspan="6" class="text-center">Aucun client trouvé.</td>
-            </tr>
+              <tr>
+                <td colspan="6" class="text-center">Aucun client trouvé.</td>
+              </tr>
             @endforelse
-          </tbody>
+          </tbody>          
         </table>
       </div>
     </div>
@@ -168,6 +125,7 @@
     </form>
   </div>
 </div>
+@stack('modals')
 @endsection
 
 @section('scripts')

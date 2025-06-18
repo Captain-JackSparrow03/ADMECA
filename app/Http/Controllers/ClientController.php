@@ -37,28 +37,32 @@ class ClientController extends Controller
         return back();
     }
 
+
     public function update(Request $request, Client $client)
     {
-        $Client = Client::FindOrFail($client);
         $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
+            'nom' => ['required', 'string', 'max:255'],
+            'prenom' => ['required', 'string', 'max:255'],
             'telephone' => [
-                'required|string|max:20',
-                Rule::unique('clients')->ignore($Client->id),
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('clients')->ignore($client->id),
             ],
             'email' => [
-                'nullable|email',
-                Rule::unique('clients')->ignore($Client->id),
+                'nullable',
+                'email',
+                Rule::unique('clients')->ignore($client->id),
             ],
-            'adresse' => 'nullable|string|max:255',
+            'adresse' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $client->update($request->all());
+        $client->update($request->only('nom', 'prenom', 'telephone', 'email', 'adresse'));
 
         flash()->success('Client modifié avec succès.');
-        return back()->with('success', 'Client modifié avec succès.');
+        return back();
     }
+
     public function destroy(Client $client)
     {
         $client->delete();

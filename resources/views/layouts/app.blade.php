@@ -9,7 +9,7 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="{{ asset('admin/assets/css/pace.min.css') }}"/>
-  <link rel="icon" href="{{ asset('admin/assets/images/favicon.ico') }}" type="image/x-icon">
+  <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css') }}"/>
   <link rel="stylesheet" href="{{ asset('admin/assets/plugins/simplebar/css/simplebar.css') }}"/>
   <link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap.min.css') }}"/>
